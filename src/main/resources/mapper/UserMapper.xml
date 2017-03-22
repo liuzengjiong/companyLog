@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.companyLog.dao.UserMapper">
+    <!--获取用户及其角色-->
+     <select id="queryUser"  resultMap="user">
+      	 select
+         u.id, u.username, u.password, u.nickname,r.role_name,ur.role_id,
+          u.phone_number, u.email, u.department_id,
+         rp.permission_id, p.permission_name, p.permission_code, p.url
+         from user u 
+         			 left join user_role ur
+         on u.id = ur.user_id 
+                     left join role r
+         on r.id = ur.role_id
+         		     left join role_permission rp
+         on r.id = rp.role_id
+         			 left join permission p
+         on p.id = rp.permission_id
+         where u.id = #{id}
+    </select>
+    <select id="queryUserByUsername"  resultMap="user">
+      	 select 
+         u.id, u.username, u.password, u.nickname,r.role_name,ur.role_id,
+         u.phone_number, u.email, u.department_id,
+         rp.permission_id, p.permission_name, p.permission_code, p.url
+         from user u 
+         			 left join user_role ur
+         on u.id = ur.user_id 
+                     left join role r
+         on r.id = ur.role_id
+                  	 left join role_permission rp
+         on r.id = rp.role_id
+         			 left join permission p
+         on p.id = rp.permission_id
+         where u.username = #{username}
+    </select>
+    <resultMap type="org.companyLog.bean.User" id="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+         <result property="password" column="password"/>
+         <result property="nickname" column="nickname"/>
+         <result property="phoneNumber" column="phone_number"/>
+         <result property="email" column="email"/>
+         <result property="departmentId" column="department_id"/>
+        <!-- property表示集合类型属性名称，ofType表示集合中的对象是什么类型 -->
+         <collection property="roles" ofType="org.companyLog.bean.Role">
+         	    <id property="id" column="role_id"/>
+        	    <result property="roleName" column="role_name"/>
+        	    <result property="roleCode" column="role_code"/>
+		        <collection property="permissions" ofType="org.companyLog.bean.Permission">
+		            <id property="id" column="permission_id"/>
+		       		<result property="permissionName" column="permission_name"/>
+		       		<result property="permissionCode" column="permission_code"/>
+		       		<result property="url" column="url"/>
+		        </collection>
+		  </collection>
+    </resultMap>
+    
+    
+    <select id="queryAllUserCount"  resultType="Integer">
+      	 select 
+         count(1)
+         from user
+         <where>  
+           <if test="null!=eqCondition">  
+	            <foreach collection="eqCondition.keys" item="k" index="index"  
+	                separator=" and ">  
+	                <if test="null!=eqCondition[k]">  
+	                    ${k} = ${eqCondition[k]}  
+	                </if> 
+	            </foreach>  
+            </if>   
+        </where>  
+    </select>
+    
+    <select id="queryAllUserWithRole"  resultMap="userWithRole">
+      	 select 
+         u.id, u.username, u.password, u.nickname,r.role_name,ur.role_id,
+         u.phone_number, u.email, u.department_id,u.create_time
+         from user u
+         			 left join user_role ur
+         on u.id = ur.user_id 
+                     left join role r
+         on r.id = ur.role_id
+         where u.id in
+<!--          in的子查询不支持limit，需要再嵌套一层 -->
+         (select limitId.id from
+           (select
+	        	id
+	        from user
+	        limit #{index,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	       ) as limitId
+<!-- 	       嵌套查询的子查询必须加别名来作为派生表进行上一级查询 -->
+	      )
+         <where>  
+         	<if test="null!=eqCondition">  
+         		and 
+	            <foreach collection="eqCondition.keys" item="k" index="index"  
+	                separator=" and ">  
+	                <if test="null!=eqCondition[k]">  
+	                    ${k} = ${eqCondition[k]}  
+	                </if> 
+	            </foreach>  
+            </if> 
+        </where>  
+		order by u.create_time desc
+       
+    </select>
+    <resultMap type="org.companyLog.bean.User" id="userWithRole">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+         <result property="password" column="password"/>
+         <result property="nickname" column="nickname"/>
+         <result property="phoneNumber" column="phone_number"/>
+         <result property="email" column="email"/>
+         <result property="departmentId" column="department_id"/>
+        <!-- property表示集合类型属性名称，ofType表示集合中的对象是什么类型 -->
+         <collection property="roles" ofType="org.companyLog.bean.Role">
+         	    <id property="id" column="role_id"/>
+        	    <result property="roleName" column="role_name"/>
+        	    <result property="roleCode" column="role_code"/>
+		  </collection>
+    </resultMap>
+	
+</mapper>

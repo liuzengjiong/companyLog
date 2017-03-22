@@ -1,0 +1,463 @@
+/*
+约定：
+    1. 被注释的是原来的属性，下方是新的属性。
+    2. 如果上方为空注释说明下方是新增属性。
+*/
+
+/*------------------------------ banner头信息 --------------------------*/
+/*设置文本选中颜色，看起来更酷一些*/
+::selection { 
+	color:white;
+	background-color:#334960;
+}
+::-moz-selection { 
+	color:white;
+	background-color:#334960;
+}
+::-webkit-selection { 
+	color:white;
+	background-color:#334960;
+}
+/*标题*/
+#header {
+    position: relative;
+    top: 0;
+    left: auto;
+    /*width: 950px;*/
+    width: 95%;
+    height: 310px;
+    margin: auto;
+    border: none;
+    padding: 0;
+    background: none;
+}
+/*副标题*/
+#blogTitle h2 {
+    float: left;
+    width: 740px;
+    margin: 0;
+    border: none;
+    padding: 0;
+    color: #666;
+    font-family: Arial,Helvetica,sans-serif;
+    /*font-size: 18px;*/
+    font-size:1px;
+    font-weight: normal;
+    text-decoration: none;
+}
+/*博客标题*/
+#blogTitle {
+    position: relative;
+    top: 130px;
+    left: 0;
+    width: 740px;
+    /*height: 75px;*/
+    height:75px;
+    /**/
+    /*line-height: 100px;*/
+    margin: 0;
+    border: none;
+    padding: 0;
+    /**/
+    padding-left:2%;
+    background: none;
+}
+/*导航栏项连接*/
+#navList a {
+    display: block;
+    width: 70px;
+    height: 31px;
+    float: left;
+    text-align: center;
+    padding-top: 9px;
+    font-size: 14px;
+    font-family: 微软雅黑,微软雅黑,微软雅黑,微软雅黑; /* 黑人问号？？？ */
+    /**/
+    color:#666;
+}
+/*-------------------------------- 主内容面板 ----------------------------------------*/
+/*主面板*/
+#main {
+    position: relative;
+    top: 0;
+    left: auto;
+    /*width: 950px;*/
+    width:95%;
+    height: auto;
+    margin: auto;
+    border: none;
+    padding-right: 0;
+}
+/*内容面板*/
+#mainContent {
+    float: right;
+    /**/
+    width:80%;
+}
+/*所有项合集的面板*/
+#mainContent .forFlow {
+    background-position: right top;
+}
+/*每一项的面板*/
+.day {
+    position: relative;
+    /*width: 690px;*/
+    width: 90%;
+    height: auto;
+    margin: 0 20px 0 20px;
+    border: none;
+    padding: 0;
+}
+/*标题*/
+.postTitle {
+    position: relative;
+    /*width: 690px;*/
+    width: 100%;
+    margin: 0;
+    border: none;
+    padding: 0;
+    color:#6A6352
+}
+/*项内容*/
+.postCon {
+    position: relative;
+    /*width: 690px;*/
+    width:100%;
+    height: auto;
+    margin: 10px 0 0 0;
+    border: none;
+    padding: 0;
+    color: #494949;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 1.4;
+}
+/*项的描述*/
+.postDesc {
+    position: relative;
+    width: 690px;
+    height: 30px;
+    margin: 0;
+    border-bottom: #ccc 1px dashed;
+    padding: 0;
+    color: #666;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 1.4;
+}
+/*---------------------------------- 查看博文详细页面 --------------------------------------*/
+
+
+
+/*博文主面板*/
+#topics {
+    position: relative;
+    /*width: 710px;*/
+    width: 95%;
+    height: auto;
+    margin: 0;
+    border: none;
+    padding: 0;
+    margin-left:2em;
+}
+/*博文标题*/
+#topics .postTitle {
+    position: relative;
+    /*width: 690px;*/
+    width: 100%;
+    margin: 0;
+    border: none;
+    padding: 0;
+    color:#6A6352;
+    margin-top:1%;
+    font-size: 30px;
+}
+
+#updateTime {
+    position: relative;
+    /*width: 690px;*/
+    width: 100%;
+    margin: 5px;
+    border: none;
+    padding: 0;
+    color:#6A6352;
+}
+/*博文内容*/
+.postBody {
+    position: relative;
+    /*width: 690px;*/
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border: none;
+    padding: 0;
+    /*color: #494949;*/
+    color:#111; /*默认的颜色好看是好看但是太不利于阅读了*/
+    /*font-family: Arial,Helvetica,sans-serif;*/
+    font-family: 微软雅黑,Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 1.6;
+}
+#cnblogs_post_body{
+	margin-top:1em;
+	margin-bottom:1em;
+}
+/*下方的作者信息*/
+#author_profile {
+    float: left;
+    /*width: 280px;*/
+    width: 30%;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #000;
+    margin-left: 0;
+    font-size: 12px;
+}
+/*推荐图标，这个东西默认是右浮动的，郁闷又没人给我推荐我还要处理它好想直接display:none算了...*/
+#div_digg {
+    float: right;
+    margin-bottom: 10px;
+    margin-right: 30px;
+    font-size: 12px;
+    /*width: 125px;*/
+    width: 33%;
+    text-align: center;
+    margin-top: 10px;
+}
+/*推荐小手图标*/
+.diggit {
+    float: left;
+    width: 46px;
+    height: 52px;
+    background: url('http://static.cnblogs.com/images/upup.gif') no-repeat;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 2px;
+    padding-top: 5px;
+}
+/*反对小手图标*/
+.buryit {
+    /*float: right;*/
+    float:left;
+    margin-left: 20px;
+    width: 46px;
+    height: 52px;
+    background: url('http://static.cnblogs.com/images/downdown.gif') no-repeat;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 2px;
+    padding-top: 5px;
+}
+/*代码样式*/
+.cnblogs_code span {
+    /*font-family: Courier New!important;*/
+    font-family:"Courier New"!important;
+    /*font-size: 12px!important;*/
+    font-size: 12px!important;
+    /**/
+    color:#090909;
+    line-height: 1.5!important;
+}
+
+.divBelowUEditor{
+	margin-right:5em;
+	vertical-top;
+	margin-top:1em; /*  */
+	margin-bottom:2em;
+}
+
+.belowUEditor{
+	float:right;
+	margin-left:1em;
+	vertical-align:center;
+}
+
+/*-------------------------------- 评论 ----------------------------------------*/
+
+.commentContainer{
+	background-color:#EEEEEE;
+	font-size: 12px!important;
+	line-height: 1.5!important;
+	
+}
+
+.commentPane{
+	background-color:#DDDDDD;
+	margin-bottom:1em;
+	
+}
+.commentList{
+	margin-bottom:1em;
+}
+.commentArea{
+	width:auto;
+	height:50%;
+	display:inline;
+	margin-left:2em;
+	margin-right:2em;
+}
+
+.commentDiv{
+	border-bottom:0.3em dotted #FFFFFF;
+	margin-bottom:0em;
+}
+.content{
+	font-size:1.5em;
+	line-height:2em;
+	margin-left:1em;
+	color:#000000;
+}
+.replyDiv{
+	background-color:#CCCCCC !important;
+	font-size:0.6em;
+	line-height:1.5em;
+	width:auto;
+}
+.informationDiv{
+	text-align:center;
+	margin:0.5em;
+	color:#555555;
+}
+.informationSpan{
+	margin:0.5em;
+}
+.replyNameSpan{
+	color:#555555;
+	display:block;
+	margin:0.5em;
+	font-size:0.6em;
+}
+.replyContent{
+	display:block;
+	margin:0.5em;
+	font-size:0.5em;
+}
+
+
+
+.replyTip{
+	color:red;
+}
+/*-------------------------------- 侧边栏 ----------------------------------------*/
+/*侧边栏*/
+#sideBar {
+    /*width: 205px;*/
+    width:auto; /*试了一下还是设置为auto不然网页缩放的时候会有重叠*/
+    height: auto;
+    float: left;
+}
+
+
+
+/*-------------------------------- 查看分类页面 ----------------------------------------*/
+
+
+.entrylist{
+	/* background-color:#FFFFFF; */
+	margin-left:3em;
+}
+
+/*单个列表项*/
+.entrylistItem {
+    position: relative;
+    /*width: 690px;*/
+    width: 90%;
+    height: auto;
+    margin: 0 20px 0 20px;
+    border-bottom: #ccc 1px dashed;
+    padding: 10px 0 10px 0;
+}
+/*标题*/
+.entrylistPosttitle {
+    position: relative;
+    /*width: 690px;*/
+    width: 100%;
+    /**/
+    font-size:18px;
+    height: auto;
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+/*标题链接*/
+.entrylistPosttitle a {
+    color: #6a6352;
+    font-family: Arial,Helvetica,sans-serif;
+    /*font-size: 14px;*/
+    font-size:18px;
+    font-weight: normal;
+}
+/*预览*/
+.entrylistPostSummary {
+    position: relative;
+    /*width: 690px;*/
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border: none;
+    padding: 10px 0 10px 0;
+    color: #494949;
+    font-family: Arial,Helvetica,sans-serif;
+    /*font-size: 12px;*/
+    font-size:14px;
+    font-weight: normal;
+    text-decoration: none;
+}
+/*元信息描述*/
+.entrylistItemPostDesc {
+    position: relative;
+    /*width: 690px;*/
+    width: 100%;
+    height: auto;
+    margin: 0;
+    
+    border: none;
+    padding: 0;
+    color: #666;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    text-decoration: none;
+}
+.entrylistItemPostDesc .postItem{
+	margin-right:1em;
+}
+/*-------------------------------- 页尾的广告 ----------------------------------------*/
+/*广告*/
+#ad_c1,#ad_t2,#under_post_news,#ad_c2,#under_post_kb,#HistoryToday{
+	display:none;
+}
+/*------------------------------- 2016-10-9 18:54:58 ---------------------------------------------------------*/
+/* 评论框 */
+.blog_comment_body {
+    word-wrap: break-word;
+    overflow: hidden;
+    /**/
+    color: #222;
+}
+/*------------------------------- 2016-10-23 00:32:12; ---------------------------------------------------------*/
+/*显示头像*/
+.avatar{
+	display:inline-block;
+	width:75px;
+	height:75px;
+	border-radius:50%;
+	background-image:url("https://pic.cnblogs.com/avatar/784924/20160819200820.png");
+	background-size:contain;
+	float:left;
+}
+/*标题div的类*/
+/*#blogTitle{
+	height:100px;
+	line-height:100px;
+}*/
+/*主标题链接*/
+#Header1_HeaderTitle{
+	line-height:75px;
+}

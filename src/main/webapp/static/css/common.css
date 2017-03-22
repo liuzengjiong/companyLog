@@ -1,0 +1,11 @@
+/* 在标题信息那里的按钮 */
+.btnTitle{
+	margin-right:1em;
+	font-size:10px !important;
+	line-height:10px;
+}
+
+
+.div_pagination{
+	text-align:center;
+}

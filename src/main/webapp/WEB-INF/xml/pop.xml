@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syspops>
+	<popitem name="项目管理" code="A001" icon="icon-wrench icon-white" url="actions/project/projectActions.action?method=getProjectInfoList"></popitem>
+	<popitem name="日志管理" code="A002" icon="icon-list-alt icon-white" url="actions/log/logActions.action?method=initializeSelectDays"></popitem>
+	<popitem name="员工管理" code="A003" icon="icon-user icon-white" url="actions/staff/staffActions.action?method=getStaffInfoList"></popitem>
+	<popitem name="角色管理" code="A004" icon="icon-eye-open icon-white" url="actions/role/roleActions.action?method=getRoleList"></popitem>
+	<popitem name="汇报管理" code="A005" icon="icon-envelope icon-white" url="actions/report/reportActions.action?method=getReportList"></popitem>
+</syspops>

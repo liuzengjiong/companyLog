@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>购买电影票</title>
+    <link href="../css/movieList.css" rel="stylesheet" type="text/css"/>
+    
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/jquery.twbsPagination.min.js"></script>
+    <script src="../js/jquery.form.js"></script>
+    <script src="../js/util.js"></script>
+    <script src="../js/movieList.js"></script>
+
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <div class="user">
+            <span id="user"></span>
+            <span id="quit">退出</span>
+        </div>
+    </div>
+    <div id="content">
+        <p>电影票列表：</p>
+        <table id="list">
+			<tr>
+				<th width="20%">名称</th>
+				<th width="10%">价格</th>
+				<th width="20%">影院</th>
+				<th width="25%">观影时间</th>
+				<th width="10%">剩余影票</th>
+				<th width="15%">操作</th>
+			</tr>
+        </table>
+        	
+    </div>
+
+    <div id="footer">
+    <div id="div_pagination" class="videoPage" style="display:table; width:auto; margin:0 auto;">
+			<ul id="pagination" class="pagination-sm">aaa</ul>
+	</div>
+        <p>Copyright © 2017 | 刘增炯moana</p>
+    </div>
+</div>
+<div id="wrap">
+    <div id="addPanel">
+        <span id="cancel">取消</span>
+        <form action="/moana/order/add" id="form" name="form" method="post">
+	            电影名称：<span id="buy_ticket_name"></span></br></br>
+	            观影时间：<span id="buy_ticket_display_time" ></span></br></br>
+	            观影影院：<span id="buy_ticket_cinema_name" ></span></br></br>
+	            购买票数 <input type="text" id="buy_ticket_num" name="purchaseNum" onkeyup="onlyIntegerKeyUp(event)"/><br/></br>
+	   	  单价：<span id="buy_ticket_price"></span>    
+	            总价：<span id="buy_ticket_sum_pricce" class="buy">0</span></br>
+	     
+	     <input hidden="true" name="sumPrice" id= "sum_price_input" />       
+	     <input hidden="true" name="ticketId" id="buy_ticket_id" />
+	    <input type="button" id="sure" value="确定"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

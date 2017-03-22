@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.companyLog.dao.RoleMapper">
+	
+	<select id="queryAllRoleCount"  resultType="Integer">
+      	 select 
+         count(1)
+         from role
+         <where>  
+           <if test="null!=eqCondition">  
+	            <foreach collection="eqCondition.keys" item="k" index="index"  
+	                separator=" and ">  
+	                <if test="null!=eqCondition[k]">  
+	                    ${k} = ${eqCondition[k]}  
+	                </if> 
+	            </foreach>  
+            </if>   
+        </where>  
+    </select>
+
+    <!--获取角色及其权限-->
+     <select id="queryAllRole"  resultMap="role">
+      	 select
+         r.id,r.role_name,r.role_code,
+         rp.permission_id, p.permission_name, p.permission_code, p.url
+         from  role r
+         		     left join role_permission rp
+         on r.id = rp.role_id
+         			 left join permission p
+         on p.id = rp.permission_id
+         <if test="null!=index and null!=rows">
+         where r.id in
+		 (select limitId.id from
+           (select
+	        	id
+	        from role
+	        limit #{index,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	       ) as limitId
+<!-- 	       嵌套查询的子查询必须加别名来作为派生表进行上一级查询 -->
+	      )    
+	     </if>   
+	     
+	      <where>  
+         	<if test="null!=eqCondition">  
+         		<if test="null!=index and null!=rows">
+         		and 
+         		</if>
+	            <foreach collection="eqCondition.keys" item="k" index="index"  
+	                separator=" and ">  
+	                <if test="null!=eqCondition[k]">  
+	                    ${k} = ${eqCondition[k]}  
+	                </if> 
+	            </foreach>  
+            </if> 
+        </where>    
+    </select>
+    
+    <select id="queryOneRole"  resultMap="role">
+      	 select
+         r.id,r.role_name,r.role_code,
+         rp.permission_id, p.permission_name, p.permission_code, p.url
+         from  role r
+         		     left join role_permission rp
+         on r.id = rp.role_id
+         			 left join permission p
+         on p.id = rp.permission_id
+         where r.id = #{id} 
+    </select>
+    
+    <resultMap type="org.companyLog.bean.Role" id="role">
+        <id property="id" column="id"/>
+        <!-- property表示集合类型属性名称，ofType表示集合中的对象是什么类型 -->
+       	    <result property="roleName" column="role_name"/>
+       	    <result property="roleCode" column="role_code"/>
+	        <collection property="permissions" ofType="org.companyLog.bean.Permission">
+	            <id property="id" column="permission_id"/>
+	       		<result property="permissionName" column="permission_name"/>
+	       		<result property="permissionCode" column="permission_code"/>
+	       		<result property="url" column="url"/>
+	        </collection>
+    </resultMap>
+	
+</mapper>

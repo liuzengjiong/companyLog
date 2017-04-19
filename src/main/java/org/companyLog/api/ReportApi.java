@@ -81,48 +81,6 @@ public class ReportApi {
           
     }  
     
-    @RequestMapping(value = "/gotoListOfAuthor", method = RequestMethod.GET)  
-    public String getReportListOfAuthor(Integer page,Integer rows ,String authorId,RedirectAttributes redirectAttributes,
-    		HttpSession httpSession){  
-        String msg = "";
-        try {  
-        	if(page==null||rows==null){
-        		page = 1;
-        		rows = SiteConfig.DEFAULT_PAGE_ROWS;
-        	}
-        	int index = (page-1)*rows;
-        	if(index<0){
-        		index = 0;
-        	}
-        	if(null == authorId || "".equals(authorId)){
-        		User user = (User) httpSession.getAttribute("user");
-        		authorId = user.getId();
-        	}
-        	
-            List<ReportShower> reportList = reportService.getReportByAuthor(index,rows,authorId);
-            httpSession.setAttribute("reports", reportList);
-            
-            Map<String,String> eqCondition = new HashMap<String,String>();
-        	eqCondition.put("author_id", authorId);
-            int count = reportService.getReportCountByCondition(eqCondition);
-            Map<String,Object> pager = new HashMap<String,Object>();
-            pager.put("total", count);
-            pager.put("page", page);
-            pager.put("rows", rows);
-            pager.put("listUrl", "report/gotoListOfAuthor");
-            httpSession.setAttribute("pager", pager);
-            
-            
-            return "redirect:/jsp/log/MyReportList.jsp";  
-            
-        }catch (Exception e) {  
-            msg = "错误："+e.getMessage();
-            System.out.println(msg);  
-        }
-        redirectAttributes.addFlashAttribute("message",msg);  
-        return "redirect:/jsp/Login.jsp";  
-          
-    }
     
     @RequestMapping(value = "/detailCheck/{id}", method = RequestMethod.GET)  
     public String gotoDetailCheck(@PathVariable String id,RedirectAttributes redirectAttributes,
@@ -142,115 +100,40 @@ public class ReportApi {
           
     }  
     
-    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)  
-    public String gotoDetail(@PathVariable String id,RedirectAttributes redirectAttributes,
-    		HttpSession httpSession){  
-        String msg = "";
-        try {  
-        	Report report = reportService.getReportById(id);
-            httpSession.setAttribute("report", report);
-            return "redirect:/jsp/log/ReportDetail.jsp";  
-            
-        }catch (Exception e) {  
-            msg = "错误："+e.getMessage();
-            System.out.println(msg);  
-        }
-        redirectAttributes.addFlashAttribute("message",msg);  
-        return "redirect:/jsp/Login.jsp";  
-          
-    } 
+    
     
     //更新 
     @RequestMapping(value = "/update", method = RequestMethod.POST)  
-    public String update(Report report,String act,
+    public String update(Report report,
     		RedirectAttributes redirectAttributes,HttpSession httpSession){  
         String msg = "";
         try {  
             Report nativeReport = reportService.getReportById(report.getId());
             User user = (User) httpSession.getAttribute("user");
-            //接收者审阅
-            if("check".equals(act)){
-	            if(nativeReport.getReceiverId().equals(user.getId())){
-	            	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	            	String timeStr = sd.format(new Date());
-	            	report.setUpdateTime(timeStr);
-	            	reportService.update(report);
-	            	
-	            	String url = "redirect:/report/gotoListOfReceiver?receiverId="+user.getId()
-	            			+"&page=1&rows="+SiteConfig.DEFAULT_PAGE_ROWS;
-	            	return url;
-	            }else{
-	            	msg = SiteConfig.REPORT_UPDATE_FAIL_RECEIVER;
-	            }
-	           //发起者修改
-            }else if("alter".equals(act)){
-            	if(nativeReport.getState() == 1){
-            		msg = SiteConfig.REPORT_HAVE_BEEN_CHECKED;
-            	}else if(nativeReport.getAuthorId().equals(user.getId())){
-            		 reportService.update(report);
+	        if(nativeReport.getReceiverId().equals(user.getId())){
+	        	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        	String timeStr = sd.format(new Date());
+	        	report.setUpdateTime(timeStr);
+	        	reportService.update(report);
+	        	
+	        	String url = "redirect:/report/gotoListOfReceiver?receiverId="+user.getId()
+	        			+"&page=1&rows="+SiteConfig.DEFAULT_PAGE_ROWS;
+	        	return url;
+	        }else{
+	        	msg = SiteConfig.REPORT_UPDATE_FAIL_RECEIVER;
+	        }
+        }catch (Exception e) {  
+            msg = "发生错误:"+e.getMessage();
+            System.out.println(msg);  
+        }
+        httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
+        redirectAttributes.addFlashAttribute("message",msg);  
+        return "redirect:/jsp/ErrorMsg.jsp";  
+    }
+    
 
-            		 
-            		String url = "redirect:/report/gotoListOfAuthor?authorId="+user.getId()
- 	            			+"&page=1&rows="+SiteConfig.DEFAULT_PAGE_ROWS;
- 	            	return url;
-            	}else{
-            		msg = SiteConfig.REPORT_UPDATE_FAIL_AUTHOR;
-            	}
-            }
-        }catch (Exception e) {  
-            msg = "发生错误:"+e.getMessage();
-            System.out.println(msg);  
-        }
-        httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
-        redirectAttributes.addFlashAttribute("message",msg);  
-        return "redirect:/jsp/ErrorMsg.jsp";  
-    }
     
-    @RequestMapping(value = "/gotoAdd", method = RequestMethod.GET)  
-    public String gotoAdd( HttpServletResponse response,
-    		RedirectAttributes redirectAttributes,HttpSession httpSession){  
-        String msg = "";
-        try {  
-        	List<User> receivers = userService.getUserByPermissionCode("p_report_manage");
-        	httpSession.setAttribute("receivers", receivers);
-        	return "redirect:/jsp/report/AddReport.jsp";
-        }catch (Exception e) {  
-            msg = "发生错误:"+e.getMessage();
-            System.out.println(msg);  
-        }
-        httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
-        redirectAttributes.addFlashAttribute("message",msg);  
-        return "redirect:/jsp/ErrorMsg.jsp";  
-    }
-    
-    @RequestMapping(value = "/add", method = RequestMethod.POST)  
-    public String add(Report report, HttpServletResponse response,
-    		RedirectAttributes redirectAttributes,HttpSession httpSession){  
-        String msg = "";
-        try {  
-        	report.setId(IDFactory.newID());
-        	User user = (User) httpSession.getAttribute("user");
-        	report.setAuthorId(user.getId());
-        	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        	String timeStr = sd.format(new Date());
-        	report.setSubmitTime(timeStr);
-        	report.setState(0);
-        	if(reportService.save(report)>0){
-        		  msg = "汇报提交成功~";
-        		  httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
-        	      redirectAttributes.addFlashAttribute("message",msg);  
-	        	return "redirect:/jsp/SuccessMsg.jsp";
-            }else{
-            	msg = SiteConfig.LOG_UPDATE_FAIL;
-            }
-        }catch (Exception e) {  
-            msg = "发生错误:"+e.getMessage();
-            System.out.println(msg);  
-        }
-        httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
-        redirectAttributes.addFlashAttribute("message",msg);  
-        return "redirect:/jsp/ErrorMsg.jsp";  
-    }
+   
     
 }  
 

@@ -74,7 +74,7 @@ public class BinaryUploader {
 			// 修改：将web路径映射为物理路径   by刘增炯
 			String physicalPath 
 				= savePath.replace(SiteConfig.WEB_UPLOAD_PATH, SiteConfig.PHYSICAL_UPLOAD_PATH);
-
+			System.out.println(physicalPath);
 			InputStream is = fileStream.openStream();
 			State storageState = StorageManager.saveFileByInputStream(is,
 					physicalPath, maxSize);

@@ -46,11 +46,3 @@ function keyWordSearch(){
 	gotoPage(requestPage,rows);
 }
 
-function gotoPage(requestPage,rows){
-	var keyword = $("#keyword").val();
-	var params = "?page="+requestPage+"&rows="+rows;
-	if(keyword){
-		params = params + "&keyword="+keyword;
-	}
-	window.location.href = "log/gotoListOfAll"+params;
-}

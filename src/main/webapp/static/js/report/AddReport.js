@@ -14,7 +14,7 @@ $(document).ready(function(){
 
 
 function submit(){
-	$("#addForm").attr("action","report/add").submit();
+	$("#addForm").attr("action","log/reportAdd").submit();
 	setHaveSubmitToForbid();
 	return false;
 }

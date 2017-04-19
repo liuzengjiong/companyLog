@@ -7,7 +7,7 @@ $(document).ready(function() {
  * 提交按钮
  */
 function submit(){
-	$("#reportForm").attr("action","report/update");
+	$("#reportForm").attr("action","log/reportUpdate");
 	setHaveSubmitToForbid();
 	$("#reportForm").submit();
 	

@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -41,8 +42,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<c:if test="${status.count!=0}">
 								<tr>
 									<td>${report.receiverName }</td>
-									<td>${report.beginDate }</td>
-									<td>${report.endDate }</td>
+									
+									<td><fmt:parseDate value="${report.beginDate}" var="date" pattern="yyyy-MM-dd"/>
+										<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" /></td>
+									<td><fmt:parseDate value="${report.endDate}" var="date" pattern="yyyy-MM-dd"/>
+										<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" /></td>
 									<td>${report.submitTime }</td>
 									<td>
 										<c:choose>
@@ -55,7 +59,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										</c:choose>
 									</td>
 									<td>
-										<a class="btn"  href="report/detail/${report.id }"  title="处理汇报"><em class="icon-eye-open"></em></a>
+										<a class="btn"  href="log/reportDetail/${report.id }"  title="处理汇报"><em class="icon-eye-open"></em></a>
 									</td>
 								</tr>
 							</c:if>

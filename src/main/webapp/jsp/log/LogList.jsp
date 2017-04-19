@@ -46,7 +46,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<c:forEach var="log" items="${logs}" varStatus="status">
 				<c:if test="${status.count!=0}">
 					<div class="entrylistItem">
-						<div class="entrylistPosttitle"><a id="${log.id }" class="entrylistItemTitle" href="javascript:void(0)">${log.title }</a></div>
+						<div class="entrylistPosttitle"><a href="log/detail/${log.id }" class="entrylistItemTitle" href="javascript:void(0)">${log.title }</a></div>
 						<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: ${log.summary }</div></div>
 						<div class="entrylistItemPostDesc">
 							<span class="postItem">发布于</span>  

@@ -30,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				
 				
 				<span style="float:right;margin-right:2em;">
-		    	 	关键词：<input style="position:relative;top:0.3em" type="text" id="keyword" value="${pager.keyword }"/>
+		    	 	关键词：<input style="position:relative;top:0.3em" type="text" placeholder="日志名称、内容、作者"  id="keyword" value="${pager.keyword }"/>
 					<button id="btnKeyword" class="btn btnTitle" type="button">
 								<em class="icon-search"></em>&nbsp;&nbsp;搜索
 					</button>
@@ -51,7 +51,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<c:forEach var="log" items="${logs}" varStatus="status">
 				<c:if test="${status.count!=0}">
 					<div class="entrylistItem">
-						<div class="entrylistPosttitle"><a href="log/detail/${log.id }"" class="entrylistItemTitle" href="javascript:void(0)">${log.title }</a></div>
+						<div class="entrylistPosttitle"><a href="log/detail/${log.id }" class="entrylistItemTitle" href="javascript:void(0)">${log.title }</a></div>
 						<div class="entrylistPostSummary"><div class="c_b_p_desc">摘要: ${log.summary }</div></div>
 						<div class="entrylistItemPostDesc">
 							<a class="postItem" href="log/gotoListOfOne?authorId=${log.authorId }">${log.authorName}</a> 

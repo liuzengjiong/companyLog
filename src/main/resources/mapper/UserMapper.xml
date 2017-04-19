@@ -59,14 +59,18 @@
     
     <select id="queryAllUserCount"  resultType="Integer">
       	 select 
-         count(1)
-         from user
+         count(DISTINCT  u.id)
+         from user u
+         			 left join user_role ur
+         on u.id = ur.user_id 
+                     left join role r
+         on r.id = ur.role_id
          <where>  
-           <if test="null!=eqCondition">  
-	            <foreach collection="eqCondition.keys" item="k" index="index"  
-	                separator=" and ">  
-	                <if test="null!=eqCondition[k]">  
-	                    ${k} = ${eqCondition[k]}  
+           <if test="null!=likeCondition">  
+	            <foreach collection="likeCondition.keys" item="k" index="i"  
+	                separator=" or ">  
+	                <if test="null!=likeCondition[k]">  
+	                    ${k} like ${likeCondition[k]}  
 	                </if> 
 	            </foreach>  
             </if>   
@@ -74,7 +78,8 @@
     </select>
     
     <select id="queryAllUserWithRole"  resultMap="userWithRole">
-      	 select 
+      
+      	 select DISTINCT
          u.id, u.username, u.password, u.nickname,r.role_name,ur.role_id,
          u.phone_number, u.email, u.department_id,u.create_time
          from user u
@@ -82,28 +87,37 @@
          on u.id = ur.user_id 
                      left join role r
          on r.id = ur.role_id
-         where u.id in
+               
+       where u.id in
 <!--          in的子查询不支持limit，需要再嵌套一层 -->
-         (select limitId.id from
+         (select SearchId.id from
            (select
-	        	id
-	        from user
-	        limit #{index,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
-	       ) as limitId
-<!-- 	       嵌套查询的子查询必须加别名来作为派生表进行上一级查询 -->
-	      )
+	        	distinct u.id
+	        from user u 
+	         left join user_role ur
+         on u.id = ur.user_id 
+                     left join role r
+         on r.id = ur.role_id
          <where>  
-         	<if test="null!=eqCondition">  
-         		and 
-	            <foreach collection="eqCondition.keys" item="k" index="index"  
-	                separator=" and ">  
-	                <if test="null!=eqCondition[k]">  
-	                    ${k} = ${eqCondition[k]}  
+         	<if test="null!=likeCondition">  
+         		
+	            <foreach collection="likeCondition.keys" item="k" index="i"  
+	                separator=" or ">  
+	                <if test="null!=likeCondition[k]">  
+	                    ${k} like ${likeCondition[k]}  
 	                </if> 
 	            </foreach>  
+	            
             </if> 
         </where>  
+        limit #{index,javaType=INTEGER},#{rows,javaType=INTEGER}
+	       ) as SearchId
+<!-- 	       嵌套查询的子查询必须加别名来作为派生表进行上一级查询 -->
+ 		
+	      )
 		order by u.create_time desc
+ 		
+		
        
     </select>
     <resultMap type="org.companyLog.bean.User" id="userWithRole">

@@ -13,8 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional
 @Service
 public class LogServiceImpl implements LogService {
     private static final Logger LOG = LoggerFactory.getLogger(LogServiceImpl.class);
@@ -55,7 +56,7 @@ public class LogServiceImpl implements LogService {
 		if(keyword!=null && keyword.length()>0){
 			keywordSearch = " and l.title like '%"+keyword+"%' or l.content like '%"+keyword+"%' or u.nickname like '%"+keyword+"%' ";
 		}
-		
+		System.out.println(keywordSearch);
 		String sql ="select "
 				+" l.id, l.author_id, l.is_limit_see, l.create_time, "
 				+" l.update_time, l.title, l.group_id, l.read_num,summary, l.content,"

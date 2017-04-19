@@ -38,12 +38,16 @@ function refreshThisPage(){
 }
 
 function gotoPage(requestPage,rows){
-	var params = "";
+	var keyword = $("#keyword").val();
+	var params = "page="+requestPage+"&rows="+rows;
+	if(keyword){
+		params = params + "&keyword="+encodeURI(keyword);
+	}
 	var url = $("#listUrl").text();
 	if(url.indexOf("?")== -1){
-		params = "?page="+requestPage+"&rows="+rows;
+		params = "?"+params;
 	}else{
-		params = "&page="+requestPage+"&rows="+rows;
+		params = "&"+params;
 	}
 	window.location.href = url+params;
 }

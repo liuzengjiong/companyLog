@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.companyLog.bean.Permission;
 import org.companyLog.bean.Role;
 import org.companyLog.bean.RolePermission;
@@ -21,6 +22,7 @@ import org.companyLog.service.UserService;
 import org.companyLog.util.IDFactory;
 import org.companyLog.util.JSONResult;
 import org.companyLog.util.SiteConfig;
+import org.companyLog.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,7 +54,7 @@ public class UserApi {
     private RoleService roleService; 
       
     @RequestMapping(value = "/gotoList", method = RequestMethod.GET)  
-    public String getRoleList(Integer page,Integer rows ,
+    public String getRoleList(Integer page,Integer rows ,String keyword,
     		RedirectAttributes redirectAttributes,
     		HttpSession httpSession){  
         String msg = "";
@@ -65,15 +67,23 @@ public class UserApi {
         	if(index<0){
         		index = 0;
         	}
-            List<User> userList = userService.getAllUserWithRole(index,rows,null);
+//        	keyword = StringUtil.toUTF8(keyword);
+        	System.out.println(keyword);
+        	Map<String,String> likeCondition = null;
+        	if(keyword!=null && keyword.length()>0){
+        		likeCondition = new HashMap<String,String>();
+        		likeCondition.put("u.nickname", "'%"+keyword+"%'");
+        		likeCondition.put("r.role_name", "'%"+keyword+"%'");
+        		likeCondition.put("u.phone_number", "'%"+keyword+"%'");
+    		}
+            List<User> userList = userService.getAllUserWithRole(index,rows,likeCondition);
             httpSession.setAttribute("staffs", userList);
-            System.out.println(userList.size()+"------------");
-            Map<String,String> eqCondition =null;
-            int count = userService.getAllUserCount(eqCondition);
+            int count = userService.getAllUserCount(likeCondition);
             Map<String,Object> pager = new HashMap<String,Object>();
             pager.put("total", count);
             pager.put("page", page);
             pager.put("rows", rows);
+            pager.put("keyword", keyword);
             pager.put("listUrl", "user/gotoList");
             httpSession.setAttribute("pager", pager);
             
@@ -126,7 +136,9 @@ public class UserApi {
 	    			String id = IDFactory.newID();
 	    			user.setId(id);
 	    			user.setUsername(user.getPhoneNumber());
-	    			user.setPassword(SiteConfig.DEFAULT_PASSWORD);
+	    			//密码加密
+	    			String cryptedPwd = new Md5Hash(SiteConfig.DEFAULT_PASSWORD,user.getId()).toString();
+	    			user.setPassword(cryptedPwd);
 	    			if(null == user.getNickname() || user.getNickname().length()==0){
 	    				user.setNickname("用户"+user.getPhoneNumber());
 	    			}
@@ -188,7 +200,6 @@ public class UserApi {
 	    			user.setPhoneNumber(phoneNumber);
 	    			user.setId(id);
 	    			user.setUsername(user.getPhoneNumber());
-	    			user.setPassword(SiteConfig.DEFAULT_PASSWORD);
 	    			if(null == user.getNickname() || user.getNickname().length()==0){
 	    				user.setNickname("用户"+user.getPhoneNumber());
 	    			}
@@ -269,8 +280,9 @@ public class UserApi {
 	    	if(u==null){
 	    		msg = "用户不存在";
 	    	}else{
-	    		u.setPassword(SiteConfig.DEFAULT_PASSWORD);
-	    		if(userService.update(u)>0){
+	    		String cryptedPwd = new Md5Hash(SiteConfig.DEFAULT_PASSWORD,u.getId()).toString();
+	    		u.setPassword(cryptedPwd);
+	    		if(userService.updatePasswordById(u)>0){
 	    			msg = "密码重置成功";
 	    			code = SiteConfig.SUCCESS;
 	    		}else{

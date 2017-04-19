@@ -13,7 +13,7 @@ public interface UserService {
     
     List<User> getUserByPermissionCode(String permissionCode);
     
-    List<User> getAllUserWithRole(Integer index,Integer rows,Map<String,String> eqCondition);
+    List<User> getAllUserWithRole(Integer index,Integer rows,Map<String,String> likeCondition);
     
     int getAllUserCount(Map<String,String> eqCondition);
    

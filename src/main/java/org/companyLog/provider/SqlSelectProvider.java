@@ -50,10 +50,18 @@ public class SqlSelectProvider {
         	}
         }
         if(null != likeCondition){
+        	String likeStr = "";
         	for(String key:likeCondition.keySet()){
         		if(!StringUtils.isNullOrEmpty(likeCondition.get(key))){
-        			sql.WHERE(key+" like "+likeCondition.get(key));
+        			if(likeStr.length()>0){
+        				likeStr += " or ";
+        			}
+        			likeStr += (key+" like "+likeCondition.get(key));
+        			
         		}
+        	}
+        	if(likeStr.length()>0){
+        		sql.WHERE(likeStr);
         	}
         }
         if(!StringUtils.isNullOrEmpty(order)){

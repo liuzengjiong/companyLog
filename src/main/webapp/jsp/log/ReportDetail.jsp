@@ -27,7 +27,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</div>
 <form action="" method="post" id="reportForm">
 	<input type="hidden" name="id" value="${report.id }" />
-	<input type="hidden" name="act" value="alter" />
 	<div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">

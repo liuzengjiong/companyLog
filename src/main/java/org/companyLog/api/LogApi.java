@@ -16,16 +16,21 @@ import org.companyLog.bean.LogCollection;
 import org.companyLog.bean.LogGroup;
 import org.companyLog.bean.LogLimitRole;
 import org.companyLog.bean.LogShower;
+import org.companyLog.bean.Report;
+import org.companyLog.bean.ReportShower;
 import org.companyLog.bean.Role;
 import org.companyLog.bean.User;
 import org.companyLog.service.LogCollectionService;
 import org.companyLog.service.LogGroupService;
 import org.companyLog.service.LogLimitRoleService;
 import org.companyLog.service.LogService;
+import org.companyLog.service.ReportService;
 import org.companyLog.service.RoleService;
+import org.companyLog.service.UserService;
 import org.companyLog.util.IDFactory;
 import org.companyLog.util.JSONResult;
 import org.companyLog.util.SiteConfig;
+import org.companyLog.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONReader;
+import com.mysql.jdbc.StringUtils;
 
 /**
  * @TODO：
@@ -61,6 +66,12 @@ public class LogApi {
 	
 	@Autowired
     private RoleService roleService; 
+	
+	@Autowired
+    private ReportService reportService; 
+	
+	@Autowired
+    private UserService userService; 
 	
 	
       
@@ -166,6 +177,8 @@ public class LogApi {
         	if(index<0){
         		index = 0;
         	}
+//        	keyword = StringUtil.toUTF8(keyword);
+        	System.out.println(keyword);
         	User user = (User) httpSession.getAttribute("user");
             List<LogShower> logList = logService.getLogOfAll(index,rows,user.getId(),keyword);
             httpSession.setAttribute("logs", logList);
@@ -175,6 +188,7 @@ public class LogApi {
             pager.put("page", page);
             pager.put("rows", rows);
             pager.put("keyword", keyword);
+            pager.put("listUrl", "log/gotoListOfAll");
             httpSession.setAttribute("pager", pager);
             System.out.println("logs:"+logList.size());
             return "redirect:/jsp/log/logSquare/LogSquare.jsp";  
@@ -261,11 +275,12 @@ public class LogApi {
             	}
             	//防止网页标签造成影响
             	summary = summary.replace("<", "[").replace(">", "]");
+            	log.setSummary(summary);
             	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             	String timeStr = sd.format(new Date());
             	log.setUpdateTime(timeStr);
             	logService.update(log);
-            	if(roles.length != 0){
+            	if(roles!=null && roles.length != 0){
             		log.setIsLimitSee(1);
 	            	List<String> roleList =  new ArrayList<String>(Arrays.asList(roles));
 	            	List<LogLimitRole> haveRoles = lrService.getListByLogId(log.getId());
@@ -474,6 +489,145 @@ public class LogApi {
         return JSONObject.toJSONString(result);  
           
     } 
+   
+    
+    
+    @RequestMapping(value = "/gotoReportListOfAuthor", method = RequestMethod.GET)  
+    public String gotoReportListOfAuthor(Integer page,Integer rows ,String authorId,RedirectAttributes redirectAttributes,
+    		HttpSession httpSession){  
+        String msg = "";
+        try {  
+        	if(page==null||rows==null){
+        		page = 1;
+        		rows = SiteConfig.DEFAULT_PAGE_ROWS;
+        	}
+        	int index = (page-1)*rows;
+        	if(index<0){
+        		index = 0;
+        	}
+        	if(null == authorId || "".equals(authorId)){
+        		User user = (User) httpSession.getAttribute("user");
+        		authorId = user.getId();
+        	}
+        	
+            List<ReportShower> reportList = reportService.getReportByAuthor(index,rows,authorId);
+            httpSession.setAttribute("reports", reportList);
+            
+            Map<String,String> eqCondition = new HashMap<String,String>();
+        	eqCondition.put("author_id", authorId);
+            int count = reportService.getReportCountByCondition(eqCondition);
+            Map<String,Object> pager = new HashMap<String,Object>();
+            pager.put("total", count);
+            pager.put("page", page);
+            pager.put("rows", rows);
+            pager.put("listUrl", "log/gotoReportListOfAuthor");
+            httpSession.setAttribute("pager", pager);
+            
+            
+            return "redirect:/jsp/log/MyReportList.jsp";  
+            
+        }catch (Exception e) {  
+            msg = "错误："+e.getMessage();
+            System.out.println(msg);  
+        }
+        redirectAttributes.addFlashAttribute("message",msg);  
+        return "redirect:/jsp/Login.jsp";  
+          
+    }
+    
+    @RequestMapping(value = "/gotoReportAdd", method = RequestMethod.GET)  
+    public String gotoAdd( HttpServletResponse response,
+    		RedirectAttributes redirectAttributes,HttpSession httpSession){  
+        String msg = "";
+        try {  
+        	List<User> receivers = userService.getUserByPermissionCode("p_report_manage");
+        	httpSession.setAttribute("receivers", receivers);
+        	return "redirect:/jsp/log/AddReport.jsp";
+        }catch (Exception e) {  
+            msg = "发生错误:"+e.getMessage();
+            System.out.println(msg);  
+        }
+        httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
+        redirectAttributes.addFlashAttribute("message",msg);  
+        return "redirect:/jsp/ErrorMsg.jsp";  
+    }
+    
+    @RequestMapping(value = "/reportDetail/{id}", method = RequestMethod.GET)  
+    public String gotoDetail(@PathVariable String id,RedirectAttributes redirectAttributes,
+    		HttpSession httpSession){  
+        String msg = "";
+        try {  
+        	Report report = reportService.getReportById(id);
+            httpSession.setAttribute("report", report);
+            return "redirect:/jsp/log/ReportDetail.jsp";  
+            
+        }catch (Exception e) {  
+            msg = "错误："+e.getMessage();
+            e.printStackTrace();
+        }
+        redirectAttributes.addFlashAttribute("message",msg);  
+        return "redirect:/jsp/Login.jsp";  
+          
+    } 
+    @RequestMapping(value = "/reportAdd", method = RequestMethod.POST)  
+    public String reportAdd(Report report, HttpServletResponse response,
+    		RedirectAttributes redirectAttributes,HttpSession httpSession){  
+        String msg = "";
+        try {  
+        	report.setId(IDFactory.newID());
+        	User user = (User) httpSession.getAttribute("user");
+        	report.setAuthorId(user.getId());
+        	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	String timeStr = sd.format(new Date());
+        	report.setSubmitTime(timeStr);
+        	report.setState(0);
+        	if(reportService.save(report)>0){
+        		  msg = "汇报提交成功~";
+        		  httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
+        	      redirectAttributes.addFlashAttribute("message",msg);  
+	        	return "redirect:/jsp/SuccessMsg.jsp";
+            }else{
+            	msg = SiteConfig.LOG_UPDATE_FAIL;
+            }
+        }catch (Exception e) {  
+            msg = "发生错误:"+e.getMessage();
+            System.out.println(msg);  
+        }
+        httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
+        redirectAttributes.addFlashAttribute("message",msg);  
+        return "redirect:/jsp/ErrorMsg.jsp";  
+    }
+    
+    //更新 
+    @RequestMapping(value = "/reportUpdate", method = RequestMethod.POST)  
+    public String update(Report report,String act,
+    		RedirectAttributes redirectAttributes,HttpSession httpSession){  
+        String msg = "";
+        try {  
+            Report nativeReport = reportService.getReportById(report.getId());
+            User user = (User) httpSession.getAttribute("user");
+            	if(nativeReport.getState() == 1){
+            		msg = SiteConfig.REPORT_HAVE_BEEN_CHECKED;
+            	}else if(nativeReport.getAuthorId().equals(user.getId())){
+            		 reportService.update(report);
+            		String url = "redirect:/log/gotoReportListOfAuthor?authorId="+user.getId()
+ 	            			+"&page=1&rows="+SiteConfig.DEFAULT_PAGE_ROWS;
+ 	            	return url;
+            	}else{
+            		msg = SiteConfig.REPORT_UPDATE_FAIL_AUTHOR;
+            	}
+        }catch (Exception e) {  
+            msg = "发生错误:"+e.getMessage();
+            System.out.println(msg);  
+        }
+        httpSession.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
+        redirectAttributes.addFlashAttribute("message",msg);  
+        return "redirect:/jsp/ErrorMsg.jsp";  
+    }
     
 }  
+
+
+
+
 

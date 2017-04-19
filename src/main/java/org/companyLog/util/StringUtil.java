@@ -1,4 +1,7 @@
 package org.companyLog.util;
+
+import java.io.UnsupportedEncodingException;
+
 /**
  * @TODO：
  * @fileName : org.companyLog.util.StringUtil.java
@@ -41,6 +44,19 @@ public class StringUtil {
 			return false;
 		}
 		return true;
+	}
+	
+	public static String toUTF8(String str){
+		if(str == null || "".equals(str)){
+			return "";
+		}
+		try {
+			return new String(str.getBytes("ISO8859-1"), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return str;
 	}
 }
 

@@ -17,6 +17,7 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.companyLog.bean.Permission;
@@ -51,9 +52,7 @@ public class HomeApi {
 	private UserService userService;
 	
     @RequestMapping(value="/login",method=RequestMethod.GET)  
-    public String loginForm(Model model){  
-    	System.out.println("GET----");
-        model.addAttribute("user", new User());  
+    public String toLoginPage(){  
         return "redirect:/jsp/Login.jsp";  
     }  
       
@@ -77,6 +76,7 @@ public class HomeApi {
             //使用权限工具进行用户登录
             SecurityUtils.getSubject().login(token);  
             Subject currentUser = SecurityUtils.getSubject(); 
+            currentUser.hasRole("aa");
             Session session = currentUser.getSession();
             User loginUser = (User) session.getAttribute("user");
             List<Permission> permissionList = new ArrayList<Permission>();
@@ -115,17 +115,15 @@ public class HomeApi {
             msg = "您没有得到相应的授权！" + e.getMessage();  
             System.out.println(msg);  
         }   
-        httpSession.setAttribute("test", "ceshi");
         redirectAttributes.addFlashAttribute("message",msg);  
         return "redirect:/jsp/Login.jsp";  
           
     }  
       
     @RequestMapping(value="/logout",method=RequestMethod.GET)    
-    public String logout(RedirectAttributes redirectAttributes,HttpSession httpSession){   
-        //使用权限管理工具进行用户的退出，跳出登录，给出提示信息  
+    public String doLogout(RedirectAttributes redirectAttributes,HttpSession httpSession){   
+        //使用权限管理工具进行用户的退出
         SecurityUtils.getSubject().logout();   
-//        httpSession.invalidate();
 //        redirectAttributes.addFlashAttribute("message", "您已安全退出");    
         return "redirect:/login";  
     }   
@@ -191,6 +189,7 @@ public class HomeApi {
 			String confirmPassword,
 			HttpSession httpSession,RedirectAttributes redirectAttributes){
     	
+    	
     	String code = SiteConfig.FAIL;
     	String msg = "";
     	User user = (User) httpSession.getAttribute("user");
@@ -202,10 +201,12 @@ public class HomeApi {
 	    		msg = checkPassword;
     		}else{
     				User originUser = userService.getUserByUsername(user.getUsername());
-    				if(!originUser.getPassword().equals(originPassword)){
+    				String cryptedOriginPwd = new Md5Hash(originPassword,originUser.getId()).toString();
+    				if(!originUser.getPassword().equals(cryptedOriginPwd)){
     					msg = "原密码不正确";
     				}else{
-    					user.setPassword(newPassword);
+    					String cryptedPwd = new Md5Hash(newPassword,originUser.getId()).toString();
+    					user.setPassword(cryptedPwd);
 		    			if(userService.updatePasswordById((user))>0){
 		    				msg = "密码修改成功";
 		    				code = SiteConfig.SUCCESS;

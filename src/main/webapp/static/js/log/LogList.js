@@ -11,10 +11,10 @@ function gotoAddLog(){
 	window.location.href="log/gotoAdd";
 }
 function gotoAddReport(){
-	window.location.href = "report/gotoAdd"
+	window.location.href = "log/gotoReportAdd"
 }
 function gotoMyReport(){
-	window.location.href = "report/gotoListOfAuthor";
+	window.location.href = "log/gotoReportListOfAuthor";
 }
 
 function setPagination(){

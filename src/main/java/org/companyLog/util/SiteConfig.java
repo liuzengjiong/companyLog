@@ -1,7 +1,14 @@
 package org.companyLog.util;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
+//对于WEB_UPLOAD_PATH，还需要在UEditor/jsp/config.json中配置
+//path.properties是实际存放的物理路径，在存放时是用物理路径replace  web路径
 public class SiteConfig {
-	public static String PHYSICAL_UPLOAD_PATH = "E:/tomcat_upload/companyLog/";
-	public static String WEB_UPLOAD_PATH = "/companyLog_upload/";
+	public static String PHYSICAL_UPLOAD_PATH = getPhysicalPath();//"E:/tomcat_upload/companyLog/";
+	public static String WEB_UPLOAD_PATH = "/uploadDir/companyLog/";
 	
 	public static String AppPath = "";
 	public static String DoMain = "/companyLog/";
@@ -36,5 +43,20 @@ public class SiteConfig {
 	public static final String SuperAdminLoginName = "admin";
 	public static final String SuperAdminPassword = "admin";
 	
-	
+	public static final String getPhysicalPath(){
+		String path = "";
+		Properties prop = new Properties(); 
+		try {
+			String t=Thread.currentThread().getContextClassLoader().getResource("").getPath();
+			InputStream in = new BufferedInputStream (new FileInputStream(t+"/path.properties"));
+			prop.load(in);     ///加载属性列表
+			path = prop.getProperty("physical_upload_path");
+			in.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			path = null;
+		}
+		return path;
+	}
 }

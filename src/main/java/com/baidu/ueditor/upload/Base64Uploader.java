@@ -34,7 +34,7 @@ public final class Base64Uploader {
 		String physicalPath 
 			= savePath.replace(SiteConfig.WEB_UPLOAD_PATH, SiteConfig.PHYSICAL_UPLOAD_PATH);
 		State storageState = StorageManager.saveBinaryFile(data, physicalPath);
-
+		System.out.println(physicalPath);
 		if (storageState.isSuccess()) {
 			storageState.putInfo("url", PathFormat.format(savePath));
 			storageState.putInfo("type", suffix);

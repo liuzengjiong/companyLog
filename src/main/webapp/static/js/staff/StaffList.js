@@ -1,8 +1,10 @@
 $(document).ready(function() {
 	$("#btnNewStaff").click(fnCreateNewStaff);
+	$("#btnKeyword").click(keyWordSearch);
 	$('button[operate="deleteStaff"]').click(fnDeleteOneStaff);
 	$('button[operate="editStaff"]').click(fnEditOneStaff);
 	$('button[operate="resetPwd"]').click(fnResetStaffPassword);
+	
 });
 
 function fnCreateNewStaff() {
@@ -87,3 +89,10 @@ function fnResetStaffPassword(){
 	};
 	window.parent.DialogConfirmResetPwd.show();
 };
+
+
+function keyWordSearch(){
+	requestPage = 1;
+	var rows = Number($("#rows").text());
+	gotoPage(requestPage,rows);
+}

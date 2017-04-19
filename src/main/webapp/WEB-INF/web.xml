@@ -31,15 +31,12 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-	    <!-- Spring和mybatis的配置文件 -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:applicationContext.xml</param-value>
-    </context-param>
+	  
 	<!-- 配置Shiro过滤器,先让Shiro过滤系统接收到的请求 -->  
 <!-- 这里filter-name必须对应applicationContext.xml中定义的<bean id="shiroFilter"/> -->  
 <!-- 使用[/*]匹配所有请求,保证所有的可控请求都经过Shiro的过滤 -->  
 <!-- 通常会将此filter-mapping放置到最前面(即其他filter-mapping前面),以保证它是过滤器链中第一个起作用的 -->  
+
 <filter>  
     <filter-name>shiroFilter</filter-name>  
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>  
@@ -67,15 +64,20 @@
     </filter-mapping>
 	<!-- <listener> <listener-class></listener-class> </listener> -->
 	
+	 <!-- 防止Spring内存溢出监听器 -->
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+    
     <!-- Spring监听器 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <!-- 防止Spring内存溢出监听器 -->
-    <listener>
-        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
-    </listener>
-
+	  <!-- Spring配置文件 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
 	
     <!-- Spring MVC servlet -->
     <servlet>
@@ -90,7 +92,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SpringMVC</servlet-name>
-        <!-- 此处可以可以配置成*.do，对应struts的后缀习惯 -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 	

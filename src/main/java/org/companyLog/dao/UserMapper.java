@@ -167,7 +167,7 @@ public interface UserMapper {
     List<User> queryAllUserWithRole(
     		@Param("index") Integer index,
     		@Param("rows") Integer rows,
-    		@Param("eqCondition")Map<String,String> eqCondition);
+    		@Param("likeCondition")Map<String,String> likeCondition);
     
-    int queryAllUserCount(@Param("eqCondition")Map<String,String> eqCondition);
+    int queryAllUserCount(@Param("likeCondition")Map<String,String> likeCondition);
 }

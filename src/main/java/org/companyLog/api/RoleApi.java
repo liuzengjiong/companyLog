@@ -11,11 +11,13 @@ import javax.servlet.http.HttpSession;
 import org.companyLog.bean.Permission;
 import org.companyLog.bean.Role;
 import org.companyLog.bean.RolePermission;
+import org.companyLog.bean.User;
 import org.companyLog.service.LogLimitRoleService;
 import org.companyLog.service.PermissionService;
 import org.companyLog.service.RolePermissionService;
 import org.companyLog.service.RoleService;
 import org.companyLog.service.UserRoleService;
+import org.companyLog.service.UserService;
 import org.companyLog.util.IDFactory;
 import org.companyLog.util.JSONResult;
 import org.companyLog.util.SiteConfig;
@@ -50,6 +52,9 @@ public class RoleApi {
 	
 	@Autowired
     private UserRoleService userRoleService; 
+	
+	@Autowired
+    private UserService userService; 
 	
 	@Autowired
     private RolePermissionService rolePermissionService; 
@@ -169,6 +174,7 @@ public class RoleApi {
     				code = SiteConfig.SUCCESS;
     				List<String> permissionList =  new ArrayList<String>(Arrays.asList(permissions));
 //    				Iterator<String> it = Arrays.asList(permissions).iterator();
+    				
     				for(Permission p : role.getPermissions()){
     					String pId = p.getId();
     					//从选择的权限列表中除去本来已经有的权限
@@ -187,6 +193,9 @@ public class RoleApi {
     					rp.setPermissionId(permissionId);
     					rolePermissionService.insert(rp);
     				}
+    				User user = (User) httpSession.getAttribute("user");
+    				user = userService.getUserByUsername(user.getUsername());
+    				httpSession.setAttribute("user", user);
     			}else{
     				msg = "更新角色失败";
     			}

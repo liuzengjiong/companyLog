@@ -16,6 +16,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.companyLog.bean.Permission;
 import org.companyLog.bean.Role;
 import org.companyLog.bean.User;
@@ -43,11 +44,11 @@ public class MyRealm extends AuthorizingRealm{
     	//获取登录时输入的用户名  
         String userName=(String) principalCollection.fromRealm(getName()).iterator().next();  
         //到数据库查是否有此对象  
-        User user=userService.getUserByUsername(userName);  
+        User user=userService.getUserByUsername(userName); 
         if(user!=null){  
             //权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）  
             SimpleAuthorizationInfo info=new SimpleAuthorizationInfo();  
-            //用户的角色集合  
+            //用户的权限集合  
             Set<String> permissions = new HashSet<String>();
             List<Role> roles = user.getRoles();
             for(Role role : roles){
@@ -55,9 +56,7 @@ public class MyRealm extends AuthorizingRealm{
             		permissions.add(perm.getPermissionCode());
             	}
             }
-//            info.setRoles(rolenames);  
-            //用户的角色对应的所有权限 
-    
+            //本系统用权限控制访问
             info.addStringPermissions(permissions);  
             return info;  
         }  
@@ -70,28 +69,21 @@ public class MyRealm extends AuthorizingRealm{
     @Override  
     protected AuthenticationInfo doGetAuthenticationInfo(  
             AuthenticationToken authenticationToken) throws AuthenticationException {
-        //UsernamePasswordToken对象用来存放提交的登录信息  
-        UsernamePasswordToken token=(UsernamePasswordToken) authenticationToken;  
         
+    	UsernamePasswordToken token=(UsernamePasswordToken) authenticationToken;  
         //查出是否有此用户  
         User user=userService.getUserByUsername(token.getUsername()); 
-        System.out.println(user==null?"null":user.getNickname()+"+"+String.valueOf(user.getPassword()));
-        
         if(user!=null){  
-        	System.out.println("用户角色："+user.getRoles().size());
-        	for(Role role:user.getRoles()){
-        		System.out.println(role.getId()+"-"+role.getRoleName());
-        		for(Permission p:role.getPermissions()){
-        			System.out.println("'"+p.getPermissionName()+"'");
-        		}
-        	}
             Subject currentUser = SecurityUtils.getSubject(); 
             Session session = currentUser.getSession();
             String password = user.getPassword();
             user.setPassword("");
             session.setAttribute("user",user );
             //若存在，将此用户存放到登录认证info中  
-             return new SimpleAuthenticationInfo(user.getUsername(), password, getName());  
+            SimpleAuthenticationInfo info = 
+            		new SimpleAuthenticationInfo(user.getUsername(), password, getName());
+            info.setCredentialsSalt(ByteSource.Util.bytes(user.getId())); 
+            return   info;
         }  
         return null;  
     }  

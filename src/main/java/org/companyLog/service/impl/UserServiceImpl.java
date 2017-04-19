@@ -11,8 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -41,10 +42,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> getAllUserWithRole(Integer index,Integer rows,Map<String,String> eqCondition) {
+	public List<User> getAllUserWithRole(Integer index,Integer rows,Map<String,String> likeCondition) {
 		// TODO Auto-generated method stub
 		System.out.println(index+":"+rows);
-		return userMapper.queryAllUserWithRole(index,rows,eqCondition);
+		return userMapper.queryAllUserWithRole(index,rows,likeCondition);
 	}
 
 	@Override
@@ -78,8 +79,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int getAllUserCount(Map<String, String> eqCondition) {
+	public int getAllUserCount(Map<String, String> likeCondition) {
 		// TODO Auto-generated method stub
-		return userMapper.queryAllUserCount(eqCondition);
+		return userMapper.queryAllUserCount(likeCondition);
 	}
 }

@@ -18,6 +18,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    <div class="row-fluid">
 		    <div id="header_nav" class="span12">
 		    	 <a href="#"><i class="icon-eye-open"></i>角色管理</a>
+		    	 
+		    	 <span style="float:right;margin-right:2em;">
+		    	 	关键词：<input style="position:relative;top:0.3em" type="text" placeholder="角色或权限名称"   id="keyword" value="${pager.keyword }"/>
+					<button id="btnKeyword" class="btn btnTitle" type="button">
+								<em class="icon-search"></em>&nbsp;&nbsp;搜索
+					</button>
+		    	 </span>
+		    	 
 		    	 <button id="btnNewRole" class="btn btnTitle" type="button">
 							<em class="icon-plus"></em>&nbsp;&nbsp;新建角色
 				</button>

@@ -79,7 +79,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</c:forEach>
 			</select>
 					<c:forEach var="haveRole" items="${data.haveRoles}" varStatus="status"> 
+					
 					<c:if test="${status.count!=0}">
+							
 							<script>
 							$("#rolesSelect option[value='${haveRole.roleId }']").prop("selected","selected");
 							</script>

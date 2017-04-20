@@ -20,9 +20,9 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
 	@Override
-	public List<Role> getAllRole(Integer index,Integer rows,Map<String,String> eqCondition) {
+	public List<Role> getAllRole(Integer index,Integer rows,Map<String,String> likeCondition) {
 		// TODO Auto-generated method stub
-		return roleMapper.queryAllRole(index,rows,eqCondition);
+		return roleMapper.queryAllRole(index,rows,likeCondition);
 	}
 	@Override
 	public Role getRoleByRoleName(String roleName) {
@@ -49,9 +49,9 @@ public class RoleServiceImpl implements RoleService {
 		return roleMapper.deleteByPrimaryKey(id);
 	}
 	@Override
-	public int getAllRoleCount(Map<String, String> eqCondition) {
+	public int getAllRoleCount(Map<String, String> likeCondition) {
 		// TODO Auto-generated method stub
-		return roleMapper.queryAllRoleCount(eqCondition);
+		return roleMapper.queryAllRoleCount(likeCondition);
 	}
     
     

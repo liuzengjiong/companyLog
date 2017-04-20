@@ -23,6 +23,7 @@ import org.companyLog.util.IDFactory;
 import org.companyLog.util.JSONResult;
 import org.companyLog.util.SiteConfig;
 import org.companyLog.util.StringUtil;
+import org.companyLog.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -119,8 +120,8 @@ public class UserApi {
     	try{
 	    	if(null == roles || roles.length == 0){
 	    		msg = "请至少选择一个角色";
-	    	}else if(null == phoneNumber || phoneNumber.length()<11){
-	    		msg = "请输入手机号码";
+	    	}else if(!ValidateUtil.checkPhoneNumber(phoneNumber)){
+	    		msg = "请输入正确格式的手机号码";
 	    	}else{
 	    		User checkUser = userService.getUserByPhone(phoneNumber);
 	    		if(checkUser!=null){
@@ -187,8 +188,10 @@ public class UserApi {
     	try{
 	    	if(null == roles || roles.length == 0){
 	    		msg = "请至少选择一个角色";
-	    	}else if(null == phoneNumber || phoneNumber.length()<11){
-	    		msg = "请输入手机号码";
+	    	}else if(!ValidateUtil.checkPhoneNumber(phoneNumber)){
+	    		msg = "请输入正确格式的手机号码";
+	    	}else if(StringUtil.isNotNull(email) && !ValidateUtil.checkEmail(email)){
+	    		msg = "请输入正确格式的邮箱";
 	    	}else{
 	    		User checkUser = userService.getUserByPhone(phoneNumber);
 	    		if(checkUser!=null && !checkUser.getId().equals(id)){

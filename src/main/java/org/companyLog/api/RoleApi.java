@@ -60,7 +60,7 @@ public class RoleApi {
     private RolePermissionService rolePermissionService; 
       
     @RequestMapping(value = "/gotoList", method = RequestMethod.GET)  
-    public String getRoleList(Integer page,Integer rows ,
+    public String getRoleList(Integer page,Integer rows ,String keyword,
     		RedirectAttributes redirectAttributes,
     		HttpSession httpSession){  
         String msg = "";
@@ -73,14 +73,21 @@ public class RoleApi {
         	if(index<0){
         		index = 0;
         	}
-            List<Role> roleList = roleService.getAllRole(index,rows,null);
+        	Map<String,String> likeCondition = null;
+        	if(keyword!=null && keyword.length()>0){
+        		likeCondition = new HashMap<String,String>();
+        		likeCondition.put("r.role_name", "'%"+keyword+"%'");
+        		likeCondition.put("p.permission_name", "'%"+keyword+"%'");
+    		}
+            List<Role> roleList = roleService.getAllRole(index,rows,likeCondition);
             httpSession.setAttribute("roles", roleList);
             
-            int count = roleService.getAllRoleCount(null);
+            int count = roleService.getAllRoleCount(likeCondition);
             Map<String,Object> pager = new HashMap<String,Object>();
             pager.put("total", count);
             pager.put("page", page);
             pager.put("rows", rows);
+            pager.put("keyword", keyword);
             pager.put("listUrl", "role/gotoList");
             httpSession.setAttribute("pager", pager);
             

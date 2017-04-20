@@ -22,7 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="control-group">
 				<label class="control-label" for="input01">原密码</label>
 				<div class="controls">
-					<input id="originPassword" name="originPassword" value="" type="text" placeholder="请填写原密码" form-val="empty" class="input-xlarge" maxlength="20">
+					<input id="originPassword" name="originPassword" value="" type="password" placeholder="请填写原密码" form-val="empty" class="input-xlarge" maxlength="20">
 				</div>
 			</div>
 		</div>
@@ -30,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="control-group">
 				<label class="control-label" for="input02">新密码</label>
 				<div class="controls input-xlarge">
-					<input id="newPassword" name="newPassword" value="" type="text" placeholder="请填写新密码" form-val="empty" class="input-xlarge" maxlength="20">
+					<input id="newPassword" name="newPassword" value="" type="password" placeholder="请填写新密码" form-val="empty" class="input-xlarge" maxlength="20">
 				</div>
 			</div>
 		</div>
@@ -38,7 +38,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="control-group">
 				<label class="control-label" for="input03">确认密码</label>
 				<div class="controls ">
-					<input id="confirmPassword" name="confirmPassword" value="" type="text" placeholder="请确认新密码"  class="input-xlarge" maxlength="20">
+					<input id="confirmPassword" name="confirmPassword" value="" type="password" placeholder="请确认新密码"  class="input-xlarge" maxlength="20">
 				</div>
 			</div>
 		</div>

@@ -27,6 +27,7 @@ import org.companyLog.service.UserService;
 import org.companyLog.util.JSONResult;
 import org.companyLog.util.SiteConfig;
 import org.companyLog.util.StringUtil;
+import org.companyLog.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -155,6 +156,8 @@ public class HomeApi {
     	try{
 	    	if(null == user || !user.getId().equals(id)){
 	    		msg = "你没有修改此用户的权限";
+	    	}else if(StringUtil.isNotNull(email) && !ValidateUtil.checkEmail(email)){
+	    		msg = "请输入正确格式的邮箱";
 	    	}else{
 	    			user.setEmail(email);
 	    			user.setNickname(nickname);

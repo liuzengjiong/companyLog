@@ -145,7 +145,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<img src="static/images/write.png"/><span>日志管理系统</span>
            </div> 
             <div id="name">
-                <input type="text" id="username" name="username" placeholder=请输入用户名/><br/>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" /><br/>
             </div>
             <div id="psw">
                 <input type="password" id="password" name="password" placeholder="请输入密码"/><br/>

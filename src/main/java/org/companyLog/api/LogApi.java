@@ -242,6 +242,7 @@ public class LogApi {
             		List<LogLimitRole> haveRoles = lrService.getListByLogId(id);
             		data.put("haveRoles", haveRoles);
             	}
+            	
             	data.put("logGroups", logGroupList);
             	data.put("roles", roleList);
             	data.put("log", log);
@@ -279,7 +280,7 @@ public class LogApi {
             	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             	String timeStr = sd.format(new Date());
             	log.setUpdateTime(timeStr);
-            	logService.update(log);
+            	System.out.println("roles"+roles==null?"null":roles.length);
             	if(roles!=null && roles.length != 0){
             		log.setIsLimitSee(1);
 	            	List<String> roleList =  new ArrayList<String>(Arrays.asList(roles));
@@ -310,7 +311,7 @@ public class LogApi {
 						lrService.deleteByLogIdAndRoleId(log.getId(), rId);
 					}
             	}
-            	
+            	logService.update(log);
             	log = logService.getLogById(log.getId(),user.getId());
             	httpSession.setAttribute("log", log);
                 return "redirect:/jsp/log/LogDetail.jsp";

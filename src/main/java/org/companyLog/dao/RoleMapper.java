@@ -109,9 +109,9 @@ public interface RoleMapper {
     List<Role> queryAllRole(
     		@Param("index") Integer index,
     		@Param("rows") Integer rows,
-    		@Param("eqCondition")Map<String,String> eqCondition);
+    		@Param("likeCondition")Map<String,String> likeCondition);
     
-    int queryAllRoleCount(@Param("eqCondition")Map<String,String> eqCondition);
+    int queryAllRoleCount(@Param("likeCondition")Map<String,String> likeCondition);
     
     Role queryOneRole(@Param("id") String id);
 }

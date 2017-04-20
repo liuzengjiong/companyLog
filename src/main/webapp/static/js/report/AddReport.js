@@ -10,6 +10,7 @@ $(document).ready(function(){
 	$("#back").click(back);
 	$("#beginDate").change(refreshWorkLog);
 	$("#endDate").change(refreshWorkLog);
+	refreshWorkLog();
 });
 
 

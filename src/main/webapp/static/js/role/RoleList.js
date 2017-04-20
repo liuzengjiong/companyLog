@@ -2,6 +2,7 @@ $(document).ready(function(){
 	$("#btnNewRole").click(fnNewRole);
 	$('button[operate="deleteRole"]').click(fnDeleteOneRole);
 	$('button[operate="editRole"]').click(fnEditOneRole);
+	$("#btnKeyword").click(keyWordSearch);
 });
 
 function fnNewRole(){
@@ -65,3 +66,9 @@ function fnDeleteOneRole(){
 	};
 	window.parent.DialogConfirm.show();
 };
+
+function keyWordSearch(){
+	requestPage = 1;
+	var rows = Number($("#rows").text());
+	gotoPage(requestPage,rows);
+}

@@ -110,6 +110,7 @@
 	            
             </if> 
         </where>  
+        order by u.create_time desc 
         limit #{index,javaType=INTEGER},#{rows,javaType=INTEGER}
 	       ) as SearchId
 <!-- 	       嵌套查询的子查询必须加别名来作为派生表进行上一级查询 -->
